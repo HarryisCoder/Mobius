@@ -84,12 +84,12 @@ def runDetection(gray):
 
 	HEAD_THRESH_LEFTRIGHT = 0.25
 	HEAD_THRESH_DOWN = 0.4
-	HEAD_CONSEC_FRAMES = 48
+	HEAD_CONSEC_FRAMES = 24
 
 	# initialize the frame counter as well as a boolean used to
 	# indicate if the alarm is going off
 	ALARM_ON = False
-
+	cv2.putText(frame, "During the trip...", (440, 360), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
 	# detect faces in the grayscale frame
 	rects = detector(gray, 0)
 	# print("rects", len(rects))
@@ -97,12 +97,24 @@ def runDetection(gray):
 		# cv2.putText(frame, "No face detected", (250, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 		global NOFACE_COUNTER
 		NOFACE_COUNTER += 1
+		print("NOFACE_COUNTER: ", NOFACE_COUNTER)
 		if (NOFACE_COUNTER > 24):
 			cv2.putText(frame, "DISTRACTION ALERT!", (0, 120),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+			global DISTRACTION_ALERT_FLAG
+			print("DISTRACTION_ALERT_FLAG: ", DISTRACTION_ALERT_FLAG)
+			if (DISTRACTION_ALERT_FLAG == False):
+				global DISTRACTION_ALERT_COUNT
+				DISTRACTION_ALERT_COUNT += 1
+				# global DISTRACTION_ALERT_FLAG
+				DISTRACTION_ALERT_FLAG = True
+				print("DISTRACTION_ALERT_COUNT: ", DISTRACTION_ALERT_COUNT)
+		# if (NOFACE_COUNTER > 30):
+		# 	NOFACE_COUNTER = 0
 
 	else:
 		NOFACE_COUNTER = 0
+		DISTRACTION_ALERT_FLAG = False
 		rect = rects[0]
 
 	# loop over the face detections
@@ -157,14 +169,20 @@ def runDetection(gray):
 						t.start()
 
 				# draw an alarm on the frame
-				cv2.putText(frame, "DROWSINESS ALERT!", (0, 90),
-					cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+				global DROWSINESS_ALERT_COUNT
+				if (DROWSINESS_ALERT_COUNT >= 3):
+					cv2.putText(frame, "You are too tired, please take a break!", (0, 90),
+						cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+				else:
+					cv2.putText(frame, "DROWSINESS ALERT!", (0, 90),
+						cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 				global DROWSINESS_ALERT_FLAG
+				print("DROWSINESS_ALERT_FLAG: ", DROWSINESS_ALERT_FLAG)
 				if (DROWSINESS_ALERT_FLAG == False):
-					global DROWSINESS_ALERT_COUNT
+					# global DROWSINESS_ALERT_COUNT
 					DROWSINESS_ALERT_COUNT += 1
 					# global DROWSINESS_ALERT_FLAG
-					DROWSINESS_ALERT_FLAG == True
+					DROWSINESS_ALERT_FLAG = True
 					print("DROWSINESS_ALERT_COUNT: ", DROWSINESS_ALERT_COUNT)
 
 		# otherwise, the eye aspect ratio is not below the blink
@@ -223,12 +241,13 @@ def runDetection(gray):
 				# draw an alarm on the frame
 				cv2.putText(frame, "DISTRACTION ALERT!", (0, 120),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-				global DISTRACTION_ALERT_FLAG
-				if (DISTRACTION_ALERT_FLAG == False):
-					global DISTRACTION_ALERT_COUNT
+				global DISTRACTION_ALERT_FLAG2
+				print("DISTRACTION_ALERT_FLAG: ", DISTRACTION_ALERT_FLAG)
+				if (DISTRACTION_ALERT_FLAG2 == False):
+					# global DISTRACTION_ALERT_COUNT
 					DISTRACTION_ALERT_COUNT += 1
-					# global DISTRACTION_ALERT_FLAG
-					DISTRACTION_ALERT_FLAG == True
+					# global DISTRACTION_ALERT_FLAG2
+					DISTRACTION_ALERT_FLAG2 = True
 					print("DISTRACTION_ALERT_COUNT: ", DISTRACTION_ALERT_COUNT)
 
 
@@ -239,6 +258,7 @@ def runDetection(gray):
 			ALARM_ON = False
 			# global DISTRACTION_ALERT_FLAG
 			DISTRACTION_ALERT_FLAG = False
+			DISTRACTION_ALERT_FLAG2 = False
 
 
 ################ main program #########################
@@ -282,11 +302,13 @@ time.sleep(1.0)
 # parameter setting
 FACE_ID_COUNTER = 0
 BLINK_COUNTER = 0
+HEAD_COUNTER = 0
 NOFACE_COUNTER = 0
 DROWSINESS_ALERT_COUNT = 0
 DISTRACTION_ALERT_COUNT = 0
 DROWSINESS_ALERT_FLAG = False
 DISTRACTION_ALERT_FLAG = False
+DISTRACTION_ALERT_FLAG2 = False
 
 picture_of_me = face_recognition.load_image_file("mypic.jpg")
 my_face_encoding = face_recognition.face_encodings(picture_of_me)[0]
@@ -325,7 +347,8 @@ while True:
 				break
 			FACE_ID_COUNTER += 1
 			print("FACE_ID_COUNTER:", FACE_ID_COUNTER)
-			cv2.putText(frame, "Log in successfully!", (180, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+			cv2.putText(frame, "Log in successfully!", (200, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+			cv2.putText(frame, "Trip begins!", (200, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
 			# show the frame
 			cv2.imshow("Frame", frame)
 			key = cv2.waitKey(1) & 0xFF
@@ -387,6 +410,7 @@ while True:
 		if key == ord("e"):
 			exit(0)
 	BLINK_COUNTER = 0
+	HEAD_COUNTER = 0
 	NOFACE_COUNTER = 0
 
 	while True:
@@ -399,8 +423,9 @@ while True:
 
 		# run drowsiness & distraction detection for each frame
 		# runDetection(gray)
-		cv2.putText(frame, "DROWSINESS COUNT: " + str(DROWSINESS_ALERT_COUNT), (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-		cv2.putText(frame, "DISTRACTION COUNT: " + str(DISTRACTION_ALERT_COUNT), (0, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		cv2.putText(frame, "[Trip summary]", (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+		cv2.putText(frame, "DROWSINESS COUNT: " + str(DROWSINESS_ALERT_COUNT), (0, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		cv2.putText(frame, "DISTRACTION COUNT: " + str(DISTRACTION_ALERT_COUNT), (0, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
 		# show the frame
 		cv2.imshow("Frame", frame)
@@ -415,6 +440,7 @@ while True:
 	DISTRACTION_ALERT_COUNT = 0
 	DROWSINESS_ALERT_FLAG = False
 	DISTRACTION_ALERT_FLAG = False
+	DISTRACTION_ALERT_FLAG2 = False
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
