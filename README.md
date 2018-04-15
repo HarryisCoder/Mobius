@@ -2,8 +2,6 @@
 
 Mobius is designed to be an mobile app that will reward good driving behavior with insurance discounts. Our current version is a PC-based solution in "driver-detection-system" forder that simulate the real-time app behavior. The actual app is still in progess and will be released in the future.
 
-Also in the DNN work folder, we includes some deep neural based algorithm that unable to demo here due to the hardware and dataset limited. People who are interested in futher developing are welcomed to use those algorithms.
-
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -60,7 +58,7 @@ The "face recognition folder" contains some related functions for face recogniti
 	- *General framework*
 * **Yifang Chen** - [cloudwaysX](https://github.com/cloudwaysX)
 	- *Distraction (head pose) detection *
-	- *DNN related works *
+	- *General framework*
 
 
 
