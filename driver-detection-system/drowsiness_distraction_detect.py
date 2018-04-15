@@ -151,27 +151,34 @@ def runDetection(gray):
 					# sound played in the background
 					if args["alarm"] != "":
 						t = Thread(target=sound_alarm,
-							args=(args["alarm"],))
+							args=("./alarm.wav",))
 						t.deamon = True
 						t.start()
 
 				# draw an alarm on the frame
 				cv2.putText(frame, "DROWSINESS ALERT!", (0, 90),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-				DROWSINESS_ALERT_COUNT += 1
-				print("DROWSINESS_ALERT_COUNT: ", DROWSINESS_ALERT_COUNT)
+				global DROWSINESS_ALERT_FLAG
+				if (DROWSINESS_ALERT_FLAG == False):
+					global DROWSINESS_ALERT_COUNT
+					DROWSINESS_ALERT_COUNT += 1
+					# global DROWSINESS_ALERT_FLAG
+					DROWSINESS_ALERT_FLAG == True
+					print("DROWSINESS_ALERT_COUNT: ", DROWSINESS_ALERT_COUNT)
 
 		# otherwise, the eye aspect ratio is not below the blink
 		# threshold, so reset the counter and alarm
 		else:
 			BLINK_COUNTER = 0
 			ALARM_ON = False
+			# global DROWSINESS_ALERT_FLAG
+			DROWSINESS_ALERT_FLAG = False
 
 		# draw the computed eye aspect ratio on the frame to help
 		# with debugging and setting the correct eye aspect ratio
 		# thresholds and frame counters
-		cv2.putText(frame, "EAR: {:.2f}".format(ear), (0, 30),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		cv2.putText(frame, "Eye Aspect Ratio: {:.2f}".format(ear), (0, 30),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
 		#calculate rotation
 		image_points = np.array([
@@ -184,8 +191,8 @@ def runDetection(gray):
                         ], dtype="double")
 		distractResult = calcRotation(frame,image_points)
 		cv2.line(frame, distractResult['p1'], distractResult['p2'],(255,0,0), 2)
-		cv2.putText(frame, "Head: {}".format(distractResult['rotVec']), (0, 60),
-			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		cv2.putText(frame, "Head Rot.: x{} y{} z{}".format(distractResult['rotVec'][0], distractResult['rotVec'][1], distractResult['rotVec'][2]), (0, 60),
+			cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
 		if abs(distractResult['rotVec'][0]) > HEAD_THRESH_LEFTRIGHT or \
 		   abs(distractResult['rotVec'][2]) > HEAD_THRESH_LEFTRIGHT or \
@@ -215,8 +222,13 @@ def runDetection(gray):
 				# draw an alarm on the frame
 				cv2.putText(frame, "DISTRACTION ALERT!", (0, 120),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-				DISTRACTION_ALERT_COUNT += 1
-				print("DISTRACTION_ALERT_COUNT: ", DISTRACTION_ALERT_COUNT)
+				global DISTRACTION_ALERT_FLAG
+				if (DISTRACTION_ALERT_FLAG == False):
+					global DISTRACTION_ALERT_COUNT
+					DISTRACTION_ALERT_COUNT += 1
+					# global DISTRACTION_ALERT_FLAG
+					DISTRACTION_ALERT_FLAG == True
+					print("DISTRACTION_ALERT_COUNT: ", DISTRACTION_ALERT_COUNT)
 
 
 		# otherwise, the eye aspect ratio is not below the blink
@@ -224,6 +236,8 @@ def runDetection(gray):
 		else:
 			HEAD_COUNTER = 0
 			ALARM_ON = False
+			# global DISTRACTION_ALERT_FLAG
+			DISTRACTION_ALERT_FLAG = False
 
 
 ################ main program #########################
@@ -270,6 +284,8 @@ BLINK_COUNTER = 0
 NOFACE_COUNTER = 0
 DROWSINESS_ALERT_COUNT = 0
 DISTRACTION_ALERT_COUNT = 0
+DROWSINESS_ALERT_FLAG = False
+DISTRACTION_ALERT_FLAG = False
 
 picture_of_me = face_recognition.load_image_file("mypic.jpg")
 my_face_encoding = face_recognition.face_encodings(picture_of_me)[0]
@@ -304,11 +320,11 @@ while True:
 		# if (loadOpenFace.FaceRecognition(frame, mypic) != -1):
 
 		if FACE_ID_COUNTER >= 20:
-			if FACE_ID_COUNTER >= 30:
+			if FACE_ID_COUNTER >= 25:
 				break
 			FACE_ID_COUNTER += 1
 			print("FACE_ID_COUNTER:", FACE_ID_COUNTER)
-			cv2.putText(frame, "Login sucessfully!", (250, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+			cv2.putText(frame, "Login successfully!", (250, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 			# show the frame
 			cv2.imshow("Frame", frame)
 			key = cv2.waitKey(1) & 0xFF
@@ -324,7 +340,7 @@ while True:
 			if len(results) != 0 and results[0] == True:
 				FACE_ID_COUNTER += 1
 				print("FACE_ID_COUNTER:", FACE_ID_COUNTER)
-				cv2.putText(frame, "Detected!", (250, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+				cv2.putText(frame, "Hi Tianshu, you are detected!", (250, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 			else:
 				FACE_ID_COUNTER = 0
 				cv2.putText(frame, "You are not the right person, please log in again!", (0, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
@@ -356,8 +372,8 @@ while True:
 		frame = imutils.resize(frame, width=650)
 		gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-		cv2.putText(frame, "DROWSINESS COUNT".DROWSINESS_ALERT_COUNT, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-		cv2.putText(frame, "DISTRACTION COUNT".DISTRACTION_ALERT_COUNT, (0, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		# run drowsiness & distraction detection for each frame
+		runDetection(gray)
 
 		# show the frame
 		cv2.imshow("Frame", frame)
@@ -370,8 +386,6 @@ while True:
 			exit(0)
 	BLINK_COUNTER = 0
 	NOFACE_COUNTER = 0
-	DROWSINESS_ALERT_COUNT = 0
-	DISTRACTION_ALERT_COUNT = 0
 
 	while True:
 		# grab the frame from the threaded video file stream, resize
@@ -383,6 +397,8 @@ while True:
 
 		# run drowsiness & distraction detection for each frame
 		# runDetection(gray)
+		cv2.putText(frame, "DROWSINESS COUNT: " + str(DROWSINESS_ALERT_COUNT), (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		cv2.putText(frame, "DISTRACTION COUNT: " + str(DISTRACTION_ALERT_COUNT), (0, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
 		# show the frame
 		cv2.imshow("Frame", frame)
@@ -393,7 +409,10 @@ while True:
 			break
 		if key == ord("e"):
 			exit(0)
-	BLINK_COUNTER = 0
+	DROWSINESS_ALERT_COUNT = 0
+	DISTRACTION_ALERT_COUNT = 0
+	DROWSINESS_ALERT_FLAG = False
+	DISTRACTION_ALERT_FLAG = False
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
