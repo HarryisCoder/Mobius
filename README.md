@@ -33,6 +33,7 @@ Also for security purpose, our app is only bind with one users. So user should r
 To run the test, simply call
 
 ```
+cd driver-detection-system/
 python3 dowsiness_and_distraction_detect.py
 ```
 
@@ -47,6 +48,8 @@ This can detect the eye size changing and can thus detect behaviors like closing
 ### Distraction Detection
 This can calculate the relative head rotation versus the fixed x-axis, y-axis and z-axis. By comparing the head pose with standard head direction, we can analyze some behaviors like texting or talking to the person next to your.
 
+## Explaination on other files
+The "face recognition folder" contains some related functions for face recognition. The 'alarm.wav' is the sound file for warning user's bad driving behavior.
 
 
 ## Authors
