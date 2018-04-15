@@ -60,7 +60,7 @@ The "face recognition folder" contains some related functions for face recogniti
 
 * **TianShu Cheng** - [HarryisCoder](https://github.com/HarryisCoder)
 	- *Identity recognition*
-	- *Drowness detection*
+	- *Drowsiness detection*
 	- *General framework*
 * **Yifang Chen** - [cloudwaysX](https://github.com/cloudwaysX)
 	- *Distraction (head pose) detection*
