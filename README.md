@@ -1,6 +1,6 @@
 # Mobius
 
-Mobius is designed to be an mobile app that will reward good driving behavior with insurance discounts. Our current version is a PC-based solution that simulate the real-time app behavior. The actual app is still in progess and will be released in the future.
+Mobius is designed to be an mobile app that will reward good driving behavior with insurance discounts. Our current version is a PC-based solution in "driver-detection-system" forder that simulate the real-time app behavior. The actual app is still in progess and will be released in the future.
 
 Also in the DNN work folder, we includes some deep neural based algorithm that unable to demo here due to the hardware and dataset limited. People who are interested in futher developing are welcomed to use those algorithms.
 
