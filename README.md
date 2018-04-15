@@ -53,11 +53,11 @@ The "face recognition folder" contains some related functions for face recogniti
 ## Authors
 
 * **TianShu Cheng** - [HarryisCoder](https://github.com/HarryisCoder)
-	- *Identity recognition *
+	- *Identity recognition*
 	- *Drowness detection*
 	- *General framework*
 * **Yifang Chen** - [cloudwaysX](https://github.com/cloudwaysX)
-	- *Distraction (head pose) detection *
+	- *Distraction (head pose) detection*
 	- *General framework*
 
 
