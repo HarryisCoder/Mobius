@@ -1,6 +1,6 @@
 # Mobius
 
-Mobius is designed to be an mobile app that will reward good driving behavior with insurance discounts. Our current version is a PC-based solution that simulate the real-time app behavior. The actual app is still in progess and will be released in the future.
+Mobius is designed to be an mobile app that will reward good driving behavior with insurance discounts. Our current version is a PC-based solution in "driver-detection-system" forder that simulate the real-time app behavior. The actual app is still in progess and will be released in the future.
 
 Also in the DNN work folder, we includes some deep neural based algorithm that unable to demo here due to the hardware and dataset limited. People who are interested in futher developing are welcomed to use those algorithms.
 
@@ -33,6 +33,7 @@ Also for security purpose, our app is only bind with one users. So user should r
 To run the test, simply call
 
 ```
+cd driver-detection-system/
 python3 dowsiness_and_distraction_detect.py
 ```
 
@@ -47,6 +48,8 @@ This can detect the eye size changing and can thus detect behaviors like closing
 ### Distraction Detection
 This can calculate the relative head rotation versus the fixed x-axis, y-axis and z-axis. By comparing the head pose with standard head direction, we can analyze some behaviors like texting or talking to the person next to your.
 
+## Explaination on other files
+The "face recognition folder" contains some related functions for face recognition. The 'alarm.wav' is the sound file for warning user's bad driving behavior.
 
 
 ## Authors
