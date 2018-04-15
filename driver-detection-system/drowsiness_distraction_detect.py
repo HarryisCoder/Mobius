@@ -94,7 +94,8 @@ def runDetection(gray):
 	rects = detector(gray, 0)
 	# print("rects", len(rects))
 	if (len(rects) == 0):
-		cv2.putText(frame, "No face detected", (250, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		# cv2.putText(frame, "No face detected", (250, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+		global NOFACE_COUNTER
 		NOFACE_COUNTER += 1
 		if (NOFACE_COUNTER > 24):
 			cv2.putText(frame, "DISTRACTION ALERT!", (0, 120),
@@ -324,14 +325,14 @@ while True:
 				break
 			FACE_ID_COUNTER += 1
 			print("FACE_ID_COUNTER:", FACE_ID_COUNTER)
-			cv2.putText(frame, "Login successfully!", (250, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+			cv2.putText(frame, "Log in successfully!", (180, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
 			# show the frame
 			cv2.imshow("Frame", frame)
 			key = cv2.waitKey(1) & 0xFF
 			continue
 
 		if len(unknown_faces_encoding) == 0:
-			cv2.putText(frame, "You are not the right person, please log in again!", (0, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+			cv2.putText(frame, "No face detected, still detecting...", (100, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
 			FACE_ID_COUNTER = 0
 		else:
 			unknown_face_encoding = unknown_faces_encoding[0]
@@ -340,10 +341,11 @@ while True:
 			if len(results) != 0 and results[0] == True:
 				FACE_ID_COUNTER += 1
 				print("FACE_ID_COUNTER:", FACE_ID_COUNTER)
-				cv2.putText(frame, "Hi Tianshu, you are detected!", (250, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+				cv2.putText(frame, "Hi Tianshu, you are detected!", (150, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+				cv2.putText(frame, "Please hold on for seconds...", (150, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
 			else:
 				FACE_ID_COUNTER = 0
-				cv2.putText(frame, "You are not the right person, please log in again!", (0, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+				cv2.putText(frame, "Wrong person detected, please log in again!", (100, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
 		
 		# show the frame
