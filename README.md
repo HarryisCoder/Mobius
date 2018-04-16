@@ -58,7 +58,7 @@ The "face recognition folder" contains some related functions for face recogniti
 
 ## Authors
 
-* **TianShu Cheng** - [HarryisCoder](https://github.com/HarryisCoder)
+* **Tianshu Cheng** - [HarryisCoder](https://github.com/HarryisCoder)
 	- *Identity recognition*
 	- *Drowsiness detection*
 	- *General framework*
